@@ -4,9 +4,7 @@ import static net.bytebuddy.matcher.ElementMatchers.*;
 import java.lang.instrument.Instrumentation;
 
 import com.root.Advice.AdviceAgents.ApiRecordAdvice;
-import com.root.Advice.AdviceAgents.ApiReplayAdvice;
 import com.root.Advice.AdviceAgents.DatabaseRecordAdvice;
-import com.root.Advice.AdviceAgents.DatabaseReplayAdvice;
 
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.asm.Advice;
@@ -37,11 +35,11 @@ class Agent {
 
   public static void premain(String agentArgs, Instrumentation inst) {
 
-        AgentBuilder agentBuilder = new AgentBuilder.Default()
-                .disableClassFormatChanges()
-                .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
-                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withTransformationsOnly())
-                .ignore(none());
+        // AgentBuilder agentBuilder = new AgentBuilder.Default()
+        //         .disableClassFormatChanges()
+        //         .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
+        //         .with(AgentBuilder.Listener.StreamWriting.toSystemError().withTransformationsOnly())
+        //         .ignore(none());
 
         String[] args = agentArgs.split(",");
         String envVarValue = null;
@@ -56,43 +54,54 @@ class Agent {
     
         if(envVarValue.equals("Record")){
 
-            agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
-            .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+            new AgentBuilder.Default()
+                .disableClassFormatChanges()
+                .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
+                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withTransformationsOnly())
+                .ignore(none())
+                .type(ElementMatchers.nameStartsWith("com.root.service"))
+                .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
                     builder.visit(Advice
                             .to(ApiRecordAdvice.class)
                             .on(ElementMatchers.named("makeApiCall"))
                     )
-            ); 
+                ).type(ElementMatchers.nameStartsWith("com.root.service"))
+                .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+                builder.visit(Advice
+                        .to(DatabaseRecordAdvice.class)
+                        .on(ElementMatchers.named("saveBlogPost"))
+                )
+                ).installOn(inst);
             
-            agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
-            .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
-                    builder.visit(Advice
-                            .to(DatabaseRecordAdvice.class)
-                            .on(ElementMatchers.named("saveBlogPost"))
-                    )
-            ); 
+            // agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
+            // .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+            //         builder.visit(Advice
+            //                 .to(DatabaseRecordAdvice.class)
+            //                 .on(ElementMatchers.named("saveBlogPost"))
+            //         )
+            // ); 
         }
-        else{
+        // else{
 
-            agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
-            .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
-                    builder.visit(Advice
-                            .to(ApiReplayAdvice.class)
-                            .on(ElementMatchers.named("makeApiCall"))
-                    )
-            ); 
+        //     agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
+        //     .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+        //             builder.visit(Advice
+        //                     .to(ApiReplayAdvice.class)
+        //                     .on(ElementMatchers.named("makeApiCall"))
+        //             )
+        //     ); 
             
-            agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
-            .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
-                    builder.visit(Advice
-                            .to(DatabaseReplayAdvice.class)
-                            .on(ElementMatchers.named("saveBlogPost"))
-                    )
-            ); 
+        //     agentBuilder.type(ElementMatchers.nameStartsWith("com.root.service"))
+        //     .transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+        //             builder.visit(Advice
+        //                     .to(DatabaseReplayAdvice.class)
+        //                     .on(ElementMatchers.named("saveBlogPost"))
+        //             )
+        //     ); 
 
-        }
+        // }
 
-        agentBuilder.installOn(inst);
+//        agentBuilder.installOn(inst);
 
   }
 }
