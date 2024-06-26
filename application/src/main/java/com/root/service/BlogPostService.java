@@ -13,7 +13,7 @@ public class BlogPostService {
     private BlogPostRepository blogPostRepository;
 
     public Long saveBlogPost(BlogPost blog){
-        BlogPost savedBlogPost = blogPostRepository.save(blog);
+        BlogPost savedBlogPost = blogPostRepository.savePost(blog);
         return savedBlogPost.getId();
     }
 }

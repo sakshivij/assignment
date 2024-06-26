@@ -24,7 +24,7 @@ public class BlogPostController {
         try{
             Long savedBlogId = blogPostService.saveBlogPost(blogPost);
             var response = OutBoundApiCall.makeApiCall();
-            System.out.println(new BlogResponse(savedBlogId, response));
+            System.out.println("Response: "+ response);
             return new ResponseEntity<>(new BlogResponse(savedBlogId, response), HttpStatus.CREATED);
         }
         catch(Exception ex){

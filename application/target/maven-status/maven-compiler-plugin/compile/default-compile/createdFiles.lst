@@ -1,6 +1,7 @@
 com/root/ApiApplication.class
 com/root/model/BlogResponse.class
 com/root/service/BlogPostService.class
+com/root/repository/BlogPostRepositoryImpl.class
 com/root/service/OutBoundApiCall.class
 com/root/controller/BlogPostController.class
 com/root/model/BlogPost.class
