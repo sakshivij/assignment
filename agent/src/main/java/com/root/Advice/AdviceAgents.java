@@ -14,24 +14,6 @@ public class AdviceAgents {
 
     }
 
-    public static class ApiReplayAdvice{
-        private static Long value = 0L;
-        
-        @Advice.OnMethodEnter(skipOn = Advice.OnDefaultValue.class)
-        public static boolean before() {
-            // Skip original method execution (false is the default value for boolean)
-            return false;
-        }
-
-    @Advice.OnMethodExit
-    public static void after(@Advice.Return(readOnly = false) Long returnValue) {
-        // Set fixed return value
-        returnValue = value + 1;
-        System.out.println("Byte buddy Intercept. HardCoded response" + returnValue);
-    }
- 
-    }
-
     public static class DatabaseRecordAdvice{
         @Advice.OnMethodExit
         public static void after(@Advice.Return(readOnly = false) Long returnValue) {
@@ -41,8 +23,7 @@ public class AdviceAgents {
         
     }
 
-    public static class DatabaseReplayAdvice{
-        private static Long value = 0L;
+    public static class ApiReplayAdvice{
         
         @Advice.OnMethodEnter(skipOn = Advice.OnDefaultValue.class)
         public static boolean before() {
@@ -57,5 +38,23 @@ public class AdviceAgents {
         System.out.println("Byte buddy Intercept. HardCoded response" + returnValue);
     }
         
+    }
+
+    public static class DatabaseReplayAdvice{
+        public static Long value = 0L;
+        
+        @Advice.OnMethodEnter(skipOn = Advice.OnDefaultValue.class)
+        public static boolean before() {
+            // Skip original method execution (false is the default value for boolean)
+            return false;
+        }
+
+    @Advice.OnMethodExit
+    public static void after(@Advice.Return(readOnly = false) Long returnValue) {
+        // Set fixed return value
+        returnValue = value + 1;
+        System.out.println("Byte buddy Intercept. HardCoded response" + returnValue);
+    }
+ 
     }
 }
