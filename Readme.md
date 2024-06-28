@@ -1,9 +1,3 @@
-## Local Setup
-
-```
-    docker-compose up
-```
-
 ## Start using maven
 
 ```
