@@ -23,4 +23,4 @@ COPY --from=builder /app/agent/target/agent-1.0-SNAPSHOT.jar /app/agent.jar
 COPY --from=builder /app/application/target/application-1.0-SNAPSHOT.jar /app/application.jar
 
 # Run the application with the specified Java agent and JVM options
-CMD ["java", "-javaagent:/app/agent.jar=HT_MODE=Record", "-Ddebug", "-jar", "/app/application.jar"]
+CMD ["java", "-javaagent:/app/agent.jar=HT_MODE=Replay", "-Ddebug", "-jar", "/app/application.jar"]
