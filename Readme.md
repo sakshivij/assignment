@@ -2,7 +2,6 @@
 
 ```
 mvn clean
-mvn install
 mvn package
 java -javaagent:agent/target/agent-1.0-SNAPSHOT.jar -Ddebug -jar application/target/application-1.0-SNAPSHOT.jar
 ```
