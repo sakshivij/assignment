@@ -9,7 +9,6 @@ COPY . /app
 
 # Run Maven commands to clean, package, and download dependencies
 RUN mvn clean
-RUN mvn install
 RUN mvn package
 
 # Stage 2: Create the final image
