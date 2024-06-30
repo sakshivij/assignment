@@ -12,13 +12,18 @@ public class OutBoundApiCall {
         HttpClient client = HttpClient.newHttpClient();
 
         // Build the HttpRequest
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://worldtimeapi.org/api/timezone/Asia/Kolkata"))
-                .GET()  // Default method is GET, can be omitted
-                .build();
-
+        HttpRequest request = getRequestBuilder();
         // Send the HttpRequest and get the HttpResponse
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
+    }
+
+
+    public static HttpRequest getRequestBuilder(){
+        HttpRequest request = HttpRequest.newBuilder(URI.create("http://worldtimeapi.org/api/timezone/Asia/Kolkata"))
+        .GET()
+        .build();
+
+        return request;
     }
 }
